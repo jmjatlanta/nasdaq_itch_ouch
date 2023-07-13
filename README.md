@@ -1,13 +1,15 @@
+## Various pieces for NASDAQ ITCH, OUCH, and SoupBinTCP
+
+
+
 ## Simple header-only C++ objects for NASDAQ ITCH 5.0 protocol
 
-NASDAQ ouch is also in process (see `ouch.h`)
-
-Simply take a peek in the single `itch.h` header file for details.
+Take a peek in the `itch.h` header file for details.
 
 There is a constructor if you want to create a blank object, and a constructor where you pass in a char pointer
 that contains the record.
 
-There are getters and setters for int and string (more soon). Below is a brief example. See `test` directory
+There are getters and setters for int and string. Below is a brief example. See `test` directory
 for more examples:
 
 ```

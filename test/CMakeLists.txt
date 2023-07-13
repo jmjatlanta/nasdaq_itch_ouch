@@ -15,6 +15,9 @@ add_executable( nasdaq_tests
     itch.cpp
     ouch.cpp
     soupbintcp.cpp
+    soupbinserver.cpp
+    ../src/soup_bin_timer.cpp
+    ../src/soup_bin_connection.cpp
 )
 
 target_include_directories(nasdaq_tests PRIVATE 
