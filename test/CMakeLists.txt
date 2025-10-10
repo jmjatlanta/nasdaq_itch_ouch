@@ -4,6 +4,8 @@ set(CMAKE_CXX_STANDARD 17)
 
 project ( nasdaq_tests )
 
+find_package(Boost REQUIRED)
+
 include(FetchContent)
 FetchContent_Declare(
     googletest
@@ -22,6 +24,7 @@ add_executable( nasdaq_tests
 
 target_include_directories(nasdaq_tests PRIVATE 
     ../include
+    ${Boost_INCLUDE_DIRS}
 )
 
 target_link_libraries(nasdaq_tests 

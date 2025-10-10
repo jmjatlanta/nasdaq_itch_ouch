@@ -21,19 +21,15 @@ struct message_record {
 };
 
 template <typename T>
-T swap_endian_bytes(T in)
-{
-    static_assert(CHAR_BIT == 8, "CHAR_BIT != 8");
-    union
-    {
-        T u;
-        unsigned char u8[sizeof(T)];
-    } source, dest;
-    source.u = in;
+constexpr T swap_endian_bytes(T value) noexcept {
+    static_assert(std::is_integral_v<T> && !std::is_same_v<T, bool>,
+                  "byteswap can only be used with integral types (excluding bool)");
 
-    for(size_t k = 0; k < sizeof(T); k++)
-        dest.u8[k] = source.u8[sizeof(T) - k - 1];
-    return dest.u;
+    T result = 0;
+    for (size_t i = 0; i < sizeof(T); ++i) {
+        result |= ((value >> (i * 8)) & 0xFF) << ((sizeof(T) - 1 - i) * 8);
+    }
+    return result;
 }
 
 template<unsigned int SIZE>
@@ -44,9 +40,28 @@ struct message {
         record[0] = message_type;
         memset( &record[1], 0, SIZE-1 );
     }
+    message(uint8_t* in, bool readOnly = false)
+    {
+        if (readOnly)
+        {
+            record = in;
+        }
+        else
+        {
+            record = (uint8_t*)malloc(SIZE);
+            memcpy(record, in, SIZE);
+        }
+
+    }
     message(const uint8_t* in)
     {
+        allocated = true;
         memcpy(record, in, SIZE);
+    }
+    ~message()
+    {
+        if (allocated)
+            free(record);
     }
     constexpr int get_size() const { return SIZE; }
     const uint8_t get_raw_byte(uint8_t pos) const { return record[pos]; }
@@ -105,7 +120,8 @@ struct message {
     }
     const uint8_t* get_record() const { return record; }
     protected:
-    uint8_t record[SIZE];
+    uint8_t* record;
+    bool allocated = false;
 };
 
 const static int8_t SYSTEM_EVENT_LEN = 12;

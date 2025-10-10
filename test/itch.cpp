@@ -4,6 +4,19 @@
 #include <fstream>
 #include <filesystem>
 
+TEST(itch, swap)
+{
+    uint16_t in16 = 0x1234;
+    uint16_t out16 = itch::swap_endian_bytes<uint16_t>(in16);
+    EXPECT_EQ(out16, 0x3412);
+    uint32_t in32 = 0x12345678;
+    uint32_t out32 = itch::swap_endian_bytes<uint32_t>(in32);
+    EXPECT_EQ(out32, 0x78563412);
+    uint64_t in64 = 0x0123456789ABCDEF;
+    uint64_t out64 = itch::swap_endian_bytes<uint64_t>(in64);
+    EXPECT_EQ(out64, 0xEFCDAB8967452301);
+}
+
 TEST(itch, test1)
 {
     const uint8_t arr[] = { 'S', 0x01, 0x00, 0x02, 0x00, 0x06, 0x00, 0x00, 0x00, 0x00, 0x00, 'O'};
@@ -62,9 +75,9 @@ TEST(itch, largeNumbers)
     EXPECT_EQ(price1, price2);
 }
 
-TEST(itch, DISABLED_parseFile)
+TEST(itch, parseFile)
 {
-    std::string fileName = "/media/jmjatlanta/ExtraDrive1/Development/cpp/ITCHData/01302020.NASDAQ_ITCH50";
+    std::string fileName = "/Users/jmjatlanta/Downloads/12302019.NASDAQ_ITCH50";
     EXPECT_TRUE(std::filesystem::exists(fileName));
     std::ifstream in(fileName.c_str(), std::ios::binary | std::ios_base::in);
     if ( (in.rdstate() & std::ifstream::failbit) != 0)
